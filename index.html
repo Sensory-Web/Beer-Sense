@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        
+        <!-- Place this asynchronous JavaScript just before your </body> tag -->
+        <script type="text/javascript">
+          (function() {
+           var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+           po.src = 'https://apis.google.com/js/client:plusone.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+         })();
+        </script>
+        
+        <!-- Google Sign-In -->
+        <script>
+            function signinCallback(authResult) {
+                gapi.client.load('plus', 'v1');
+                if (authResult['status']['signed_in']) {
+                // Update the app to reflect a signed in user
+                // Hide the sign-in button now that the user is authorized, for example:
+                document.getElementById('signinButton').setAttribute('style', 'display:none');
+                document.getElementById('signoutButton').setAttribute('style', 'display:inline');
+                document.getElementById('settings').setAttribute('style', 'display:inline');
+                
+                // This sample assumes a client object has been created.
+                // To learn more about creating a client, check out the starter:
+                //  https://developers.google.com/+/quickstart/javascript
+                var request = gapi.client.plus.people.get({'userId' : 'me'});
+                
+                request.execute(function(resp) {
+                    console.log('ID: ' + resp.id);
+                    console.log('Display Name: ' + resp.displayName);
+                    console.log('Image URL: ' + resp.image.url);
+                    console.log('Profile URL: ' + resp.url);
+                    
+                    document.getElementById('userInfo').setAttribute('style', 'display:inline');
+                    document.getElementById('avatar').setAttribute('src', resp.image.url);
+                    document.getElementById('username').innerHTML=resp.displayName;
+                    document.getElementById('firstName').setAttribute('value', resp.name.givenName);
+                });        
+                } else {
+                // Update the app to reflect a signed out user
+                // Possible error values:
+                //   "user_signed_out" - User is signed-out
+                //   "access_denied" - User denied access to your app
+                //   "immediate_failed" - Could not automatically log in the user
+                console.log('Sign-in state: ' + authResult['error']);
+                document.getElementById('signinButton').setAttribute('style', 'display:inline');
+                document.getElementById('signoutButton').setAttribute('style', 'display:none');
+                document.getElementById('settings').setAttribute('style', 'display:none');
+                
+                document.getElementById('userInfo').setAttribute('style', 'display:none');                
+                document.getElementById('avatar').setAttribute('src', '');
+                document.getElementById('username').innerHTML="";
+                document.getElementById('firstName').setAttribute('value', '');
+                }
+                }
+            function signoutCallback(){
+                gapi.auth.signOut();
+                }
+        </script>
+        
+        <!-- Firebase API
+        <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+        -->
+        
+        <!-- Parse API -->
+        <script src="//www.parsecdn.com/js/parse-1.2.16.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Beer Sense</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">Add Beer</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Web-Based Sensory Analysis</h1>
+        <p>This website is designed to allow you to share beer tasting notes with others.  Through a simple interface, you can analyze the flavor, aroma, and mouthfeel of a beer, and share your notes via social networks (e.g., Facebook, Untappd, Twitter, Google+, etc)</p>
+        <p><a class="btn btn-primary btn-lg" data-toggle="collapse" data-target="#demo" onclick="getLocation()">Try it &raquo;</a></p>
+      </div>
+    </div>
+    
+    <div id="demo" class="container panel panel-default collapse">
+        <div class="row panel-body">
+            <div class="col-sm-4">
+                <div id="signinButton">
+                  <span
+                    class="g-signin"
+                    data-callback="signinCallback"
+                    data-clientid="268984396909-tcroqtja1g8vi639b8b33j1thgsntl9e.apps.googleusercontent.com"
+                    data-cookiepolicy="single_host_origin"
+                    data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                    data-scope="https://www.googleapis.com/auth/plus.login">
+                  </span>
+                </div> <!--signinButton-->
+                <div id="userInfo" style="display:none;">
+                    <img id="avatar" data-src="holder.js/140x140" class="img-rounded" style="width: 50px; height: 50px;"\> 
+                    <span id="username"> </span> 
+                </div>
+                <p></p>
+                <div class="well">
+                    <p><a href="#" onclick="mySession=new Session(); addLocation(mySession);"><span class="glyphicon glyphicon-plus"></span> New Tasting Session</a></p>
+                    <p><a href="#" onclick="getCurrentLocalSessions();"><span class="glyphicon glyphicon-globe"></span> Find Nearby Tasting Sessions</a></p>
+                    <p><a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a></p>
+                </div>
+                <div>
+                    <a href="#" title="settings" id="settings"><span class="glyphicon glyphicon-wrench"></span> settings</a><br/>
+                    <a href="#" title="sign out" id="signoutButton" onclick="signoutCallback()"><span class="glyphicon glyphicon-log-out"></span> sign out</a>
+                </div>
+            </div><!--col-->
+            <div class="col-sm-4">
+                <span class="glyphicon glyphicon-user"></span> My Name:<br/>
+                <input type="edit" name="firstName" id="firstName" onchange="updateUserName()"/><br/>
+                
+                Beer Name:<br/>
+                <input type="edit" name="beerName" id="beerName" onchange="updateBeerName()"/><br/>
+                
+                <span class="glyphicon glyphicon-globe"></span> Location Name:<br/>
+                <input type="edit" name="locationName" id="locationName" onchange="updateLocationName()"/><br/>
+                <span id="location"> </span><br/>
+                <div id="mapholder"> </div><br/>
+            </div><!--col-->
+            <div class="col-sm-4">
+                <h3><span class="glyphicon glyphicon-stats"></span> Sensory Analysis</h3>
+                Aroma:<br/>
+                <input type="range" name="aromaScore" id="aromaScore" min="0" max="12" value="0"/> 
+                <span id="aromaScoreVal">0</span> 
+                <a href="#" title="edit details" data-toggle="modal" data-target="#aromaModal"><span class="glyphicon glyphicon-pencil"></span></a> <br/>
+                
+                <!-- aromaModal -->
+                <div class="modal fade" id="aromaModal" tabindex="-1" role="dialog" aria-labelledby="aromaModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="aromaModalLabel">Aroma</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Malt</th>
+                                    <td><input type="checkbox" name="aromaMaltNone" value=""> None</td>
+                                    <td><input type="range" name="aromaMaltScore" id="aromaMaltScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Hops</th>
+                                    <td><input type="checkbox" name="aromaHopsNone" value=""> None</td>
+                                    <td><input type="range" name="aromaHopsScore" id="aromaHopsScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Esters</th>
+                                    <td><input type="checkbox" name="aromaEstersNone" value=""> None</td>
+                                    <td><input type="range" name="aromaEstersScore" id="aromaEstersScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Phenols</th>
+                                    <td><input type="checkbox" name="aromaPhenolsNone" value=""> None</td>
+                                    <td><input type="range" name="aromaPhenolsScore" id="aromaPhenolsScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Alcohol</th>
+                                    <td><input type="checkbox" name="aromaAlcoholNone" value=""> None</td>
+                                    <td><input type="range" name="aromaAlcoholScore" id="aromaAlcoholScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Sweetness</th>
+                                    <td><input type="checkbox" name="aromaSweetnessNone" value=""> None</td>
+                                    <td><input type="range" name="aromaSweetnessScore" id="aromaSweetnessScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Acidity</th>
+                                    <td><input type="checkbox" name="aromaAcidityNone" value=""> None</td>
+                                    <td><input type="range" name="aromaAcidityScore" id="aromaAcidityScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                                <tr>
+                                    <th><input type="text" name="aromaOtherText"></th>
+                                    <td><input type="checkbox" name="aromaOtherNone" value=""> None</td>
+                                    <td><input type="range" name="aromaOtherScore" id="aromaOtherScore" min="1" max="5" value="1"/></td>
+                                </tr>
+                            </table>
+                        </div><!-- table-responsive -->
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>Malt</th>
+                                    <th>Hops</th>
+                                    <th>Esters</th>
+                                    <th>Other</th>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltGrainy" value=""> Grainy</td>
+                                    <td><input type="checkbox" name="aromaHopsCitrusy" value=""> Citrusy</td>
+                                    <td><input type="checkbox" name="aromaEstersFruity" value=""> 'Fruity'</td>
+                                    <td><input type="checkbox" name="aromaOtherBrett" value=""> Brett.</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltCaramel" value=""> Caramel</td>
+                                    <td><input type="checkbox" name="aromaHopsEarthy" value=""> Earthy</td>
+                                    <td><input type="checkbox" name="aromaEstersApple" value=""> Apple/Pear</td>
+                                    <td><input type="checkbox" name="aromaOtherFruit" value=""> Fruit</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltBready" value=""> Bready</td>
+                                    <td><input type="checkbox" name="aromaHopsFloral" value=""> Floral</td>
+                                    <td><input type="checkbox" name="aromaEstersBanana" value=""> Banana</td>
+                                    <td><input type="checkbox" name="aromaOtherLactic" value=""> Lactic</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltRich" value=""> Rich</td>
+                                    <td><input type="checkbox" name="aromaHopsGrassy" value=""> Grassy</td>
+                                    <td><input type="checkbox" name="aromaEstersBerry" value=""> Berry</td>
+                                    <td><input type="checkbox" name="aromaOtherSmoke" value=""> Smoke</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltDarkFruit" value=""> Dark Fruit</td>
+                                    <td><input type="checkbox" name="aromaHopsHerbal" value=""> Herbal</td>
+                                    <td><input type="checkbox" name="aromaEstersCitrus" value=""> Citrus</td>
+                                    <td><input type="checkbox" name="aromaOtherSpice" value=""> Spice</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltToasty" value=""> Toasty</td>
+                                    <td><input type="checkbox" name="aromaHopsPiney" value=""> Piney</td>
+                                    <td><input type="checkbox" name="aromaEstersDriedFruit" value=""> Dried Fruit</td>
+                                    <td><input type="checkbox" name="aromaOtherVinous" value=""> Vinous</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltRoasty" value=""> Roasty</td>
+                                    <td><input type="checkbox" name="aromaHopsSpicy" value=""> Spicy</td>
+                                    <td><input type="checkbox" name="aromaEstersGrape" value=""> Grape</td>
+                                    <td><input type="checkbox" name="aromaOtherWood" value=""> Wood</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="aromaMaltBurnt" value=""> Burnt</td>
+                                    <td><input type="checkbox" name="aromaHopsWoody" value=""> Woody</td>
+                                    <td><input type="checkbox" name="aromaEstersStoneFruit" value=""> Stone Fruit</td>
+                                    <td><input type="checkbox" name="aromaOtherOther" value=""> _____</td>
+                                </tr>
+                            </table>
+                        </div><!-- table-responsive -->
+                        <div>
+                            <div class="pull-right">
+                                <input type="checkbox" name="aromaFlawed" value=""> flawed
+                            </div>
+                        </div>
+                        <div>
+                            <div class="pull-right">
+                                Total Aroma Score: 
+                                <input type="range" name="aromaScore2" id="aromaScore2" min="0" max="12" value="0"/> 
+                                <span id="aromaScoreVal2">0</span>
+                            </div>
+                        </div>
+                      </div><!-- modal-body-->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+                      </div>
+                    </div><!-- modal-content -->
+                  </div><!-- modal-dialog -->
+                </div><!-- aromaModal -->
+                
+                Appearance:<br/>
+                <input type="range" name="appearanceScore" id="appearanceScore" min="0" max="3" value="0"/> 
+                <span id="appearanceScoreVal">0</span> 
+                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+                
+                Flavor:<br/>
+                <input type="range" name="flavorScore" id="flavorScore" min="0" max="20" value="0"/> 
+                <span id="flavorScoreVal">0</span> 
+                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+                
+                Mouthfeel:<br/>
+                <input type="range" name="mouthfeelScore" id="mouthfeelScore" min="0" max="5" value="0"/> 
+                <span id="mouthfeelScoreVal">0</span> 
+                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+                
+                Overall Impression:<br/>
+                <input type="range" name="impressionScore" id="impressionScore" min="0" max="10" value="0"/> 
+                <span id="impressionScoreVal">0</span> 
+                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+                
+                TOTAL: <span id="totalScore">0</span>
+                
+                <!-- 
+                maybe implement a callback for each input field that posts JSON to a PHP file?
+                https://api.jquery.com/jQuery.post/
+                -->
+                
+                <!--
+                Use Firebase API: https://www.firebase.com/docs/
+                [Note: free account allows 50 concurrent connections]
+                
+                Hurray! You just created a Firebase named 'beersense' - your data will be located at:
+                    https://beersense.firebaseio.com/
+                
+                To get started, you'll need to include this snippet of JavaScript in the <head> tag of your web pages:
+                    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+                
+                You can then write data into Firebase like this:
+                    var dataRef = new Firebase("https://beersense.firebaseio.com");
+                    dataRef.set("I am now writing data into Firebase!");
+                -->
+                
+                <!--
+                Add ability to see (in real-time) what others are saying?
+                -->
+                
+                <!--
+                Note that Firebase offers facebook/twitter/email auth
+                http://firebase.github.io/firebase-simple-login/
+                -->
+                
+            </div><!--col-->
+        </div><!--row-->
+    </div><!--demo-->
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-sm-4">
+          <h2>Learn</h2>
+          <p>Learn about beer styles, brewing processes, and the variety of aromas and tastes that you might encounter.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="col-sm-4">
+          <h2>Share</h2>
+          <p>Share your tasting notes with friends via your favorite social network.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="col-sm-4">
+          <h2>Practice</h2>
+          <p>Are you a beer judge, or do you want to become one?  Use this app to practice judging beers.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Jon Boley 2014</p>
+      </footer>
+    </div> <!-- /container -->        
+    
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+
+<script src="js/vendor/bootstrap.min.js"></script>
+
+<script src="js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38494371-2', 'perceptualentropy.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script>
+    function updateTotalScore(){                 
+       var newVal = 0;
+       newVal += $('#aromaScore').val()/1;
+       newVal += $('#appearanceScore').val()/1;
+       newVal += $('#flavorScore').val()/1;
+       newVal += $('#mouthfeelScore').val()/1;
+       newVal += $('#impressionScore').val()/1;
+       $("#totalScore").html(newVal);
+    }
+    
+    $("#aromaScore").change(function () {                  
+       var newValue = $('#aromaScore').val();
+       $("#aromaScoreVal").html(newValue);
+       updateTotalScore();
+       
+       console.log('Saving new aroma score ('+newValue+') to session ('+thisSession.id+')');
+       thisSession.set("aromaScore", newValue);
+       thisSession.save();
+    });
+    
+    $("#appearanceScore").change(function () {                 
+       var newValue = $('#appearanceScore').val();
+       $("#appearanceScoreVal").html(newValue);
+       updateTotalScore();
+       
+       thisSession.set("appearanceScore", newValue);
+       thisSession.save();
+    });
+    
+    $("#flavorScore").change(function () {                 
+       var newValue = $('#flavorScore').val();
+       $("#flavorScoreVal").html(newValue);
+       updateTotalScore();
+       
+       thisSession.set("flavorScore", newValue);
+       thisSession.save();
+    });
+    
+    $("#mouthfeelScore").change(function () {                  
+       var newValue = $('#mouthfeelScore').val();
+       $("#mouthfeelScoreVal").html(newValue);
+       updateTotalScore();
+       
+       thisSession.set("mouthfeelScore", newValue);
+       thisSession.save();
+    });
+    
+    $("#impressionScore").change(function () {                 
+       var newValue = $('#impressionScore').val();
+       $("#impressionScoreVal").html(newValue);
+       updateTotalScore();
+       
+       thisSession.set("impressionScore", newValue);
+       thisSession.save();
+    });
+</script>
+
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+<script>
+    var x = document.getElementById("location");
+    function getLocation()
+      {
+      if (navigator.geolocation)
+        {
+        navigator.geolocation.getCurrentPosition(showPosition,showError);
+        }
+      else{x.innerHTML = "Geolocation is not supported by this browser.";}
+      }
+    function showError(error)
+      {
+      switch(error.code) 
+        {
+        case error.PERMISSION_DENIED:
+          x.innerHTML = "Please enable geolocation to use social features."
+          break;
+        case error.POSITION_UNAVAILABLE:
+          x.innerHTML = "Location information is unavailable."
+          break;
+        case error.TIMEOUT:
+          x.innerHTML = "The request to get user location timed out."
+          break;
+        case error.UNKNOWN_ERROR:
+          x.innerHTML = "An unknown geolocation error occurred."
+          break;
+        }
+      }
+    function showPosition(position)
+      {
+      lat=position.coords.latitude;
+      lon=position.coords.longitude;
+      latlon=new google.maps.LatLng(lat, lon)
+      mapholder=document.getElementById('mapholder')
+      mapholder.style.height='200px';
+      mapholder.style.width='200px';
+    
+      var myOptions={
+      center:latlon,zoom:14,
+      mapTypeId:google.maps.MapTypeId.ROADMAP,
+      mapTypeControl:false,
+      navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+      };
+      var map=new google.maps.Map(document.getElementById("mapholder"),myOptions);
+      var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+      }
+</script>
+
+<script>
+    // initialize code to use Parse API
+    console.log('Initializing Parse API...');
+    // Test:
+    Parse.initialize("2vvcjlkKTVA3N8cKf03QiWdgLGQWmXAzNwXwPTt1", "bIo0Milr9axpuGCSFLOXR0jN2Y4dUOJlUr8JBdY3");
+    // Beer Sense:
+    //Parse.initialize("OwAR25EdrsgZE6fPdlws5czLrtoYxtV1ym9Uyys1", "6LGiPcWb2TggJAEdjQPzIyXtzyFlpCOY1tISoZYF");
+    
+    var Session = Parse.Object.extend("Session");
+    thisSession = new Session(); // default to starting new Session
+    
+    function addLocation(sessionObj) {
+        console.log('Getting geolocation...');
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(function(position){
+                latVal=position.coords.latitude;
+                longVal=position.coords.longitude;
+                console.log('Latitude: ' + latVal);
+                console.log('Latitude: ' + longVal);
+                var point = new Parse.GeoPoint({latitude: latVal, longitude: longVal});
+                sessionObj.set("location", point);
+                sessionObj.save(null).then(function(object) {
+                  console.log('Geolocation saved to session id: ' + sessionObj.id);
+                })
+            });
+        }else{
+            console.log('Geolocation is not supported by this browser');
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+    
+    function saveSession(sessionObj){
+    sessionObj.save(null, {
+      success: function(sessionObj) {
+        // Execute any logic that should take place after the object is saved.
+        alert('New object created with objectId: ' + thisSession.id);
+      },
+      error: function(sessionObj, error) {
+        // Execute any logic that should take place if the save fails.
+        // error is a Parse.Error with an error code and description.
+        alert('Failed to create new object, with error code: ' + error.description);
+      }
+    });
+    }
+    
+    function getCurrentLocalSessions(){
+        console.log('Getting geolocation...');
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(function(position){
+                latVal=position.coords.latitude;
+                longVal=position.coords.longitude;
+                console.log('Latitude: ' + latVal);
+                console.log('Latitude: ' + longVal);
+                // User's location
+                var userGeoPoint = new Parse.GeoPoint({latitude: latVal, longitude: longVal});
+                // Create a query for places
+                var query = new Parse.Query(Session);
+                query.descending("updatedAt");
+                // Interested in locations near user.
+                query.near("location", userGeoPoint);
+                // Limit what could be a lot of points.
+                query.limit(10);
+                // Final list of objects
+                query.find({
+                  success: function(nearbySessions) {
+                      console.log('Recent nearby sessions: ');
+                      for (var i=0; i<nearbySessions.length; i++)
+                        { 
+                        console.log('  ' + nearbySessions[i].id);
+                        }
+                  }
+                });
+            });
+        }else{
+            console.log('Geolocation is not supported by this browser');
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+        
+    }
+        
+    function createDefaultUser(){
+        var user = new Parse.User();
+        user.set("username", "AnonymousUser");
+        user.set("password", "fakepassword");
+         
+        user.signUp(null, {
+          success: function(user) {
+            console.log('User created: ' + user.username);
+          },
+          error: function(user, error) {
+            // Show the error message somewhere and let the user try again.
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+    }
+    
+    function defaultUserLogin(){
+        console.log('Logging in default user...');
+        Parse.User.logIn("AnonymousUser", "fakepassword", {
+          success: function(user) {
+            console.log('User logged in: ' + user.username);
+          },
+          error: function(user, error) {
+            console.log('Failed to log in user: ' + user.username);
+          }
+        });
+    }
+    
+    // use this to log a user out:
+    // Parse.User.logOut();
+    // if external account is used, log out default user and log in new (create new if needed)
+    
+</script>
+
+    </body>
+</html>

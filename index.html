@@ -21,7 +21,8 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-        
+
+        <!-- Google Sign-In -->
         <!-- Place this asynchronous JavaScript just before your </body> tag -->
         <script type="text/javascript">
           (function() {
@@ -30,7 +31,7 @@
            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
          })();
         </script>
-        
+
         <!-- Google Sign-In -->
         <script>
             function signinCallback(authResult) {
@@ -39,25 +40,24 @@
                 // Update the app to reflect a signed in user
                 // Hide the sign-in button now that the user is authorized, for example:
                 document.getElementById('signinButton').setAttribute('style', 'display:none');
-                document.getElementById('signoutButton').setAttribute('style', 'display:inline');
-                document.getElementById('settings').setAttribute('style', 'display:inline');
-                
+                document.getElementById('signedIn').setAttribute('style', 'display:inline');
+
                 // This sample assumes a client object has been created.
                 // To learn more about creating a client, check out the starter:
                 //  https://developers.google.com/+/quickstart/javascript
                 var request = gapi.client.plus.people.get({'userId' : 'me'});
-                
+
                 request.execute(function(resp) {
                     console.log('ID: ' + resp.id);
                     console.log('Display Name: ' + resp.displayName);
                     console.log('Image URL: ' + resp.image.url);
                     console.log('Profile URL: ' + resp.url);
-                    
+
                     document.getElementById('userInfo').setAttribute('style', 'display:inline');
                     document.getElementById('avatar').setAttribute('src', resp.image.url);
                     document.getElementById('username').innerHTML=resp.displayName;
                     document.getElementById('firstName').setAttribute('value', resp.name.givenName);
-                });        
+                });
                 } else {
                 // Update the app to reflect a signed out user
                 // Possible error values:
@@ -66,10 +66,9 @@
                 //   "immediate_failed" - Could not automatically log in the user
                 console.log('Sign-in state: ' + authResult['error']);
                 document.getElementById('signinButton').setAttribute('style', 'display:inline');
-                document.getElementById('signoutButton').setAttribute('style', 'display:none');
-                document.getElementById('settings').setAttribute('style', 'display:none');
-                
-                document.getElementById('userInfo').setAttribute('style', 'display:none');                
+                document.getElementById('signedIn').setAttribute('style', 'display:none');
+
+                document.getElementById('userInfo').setAttribute('style', 'display:none');
                 document.getElementById('avatar').setAttribute('src', '');
                 document.getElementById('username').innerHTML="";
                 document.getElementById('firstName').setAttribute('value', '');
@@ -79,49 +78,21 @@
                 gapi.auth.signOut();
                 }
         </script>
-        
+
         <!-- Firebase API
         <script src="https://cdn.firebase.com/v0/firebase.js"></script>
         -->
-        
+
         <!-- Parse API -->
         <script src="//www.parsecdn.com/js/parse-1.2.16.min.js"></script>
     </head>
-    <body>
+    <body onload="getLocation()">
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Beer Sense</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">Add Beer</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Web-Based Sensory Analysis</h1>
-        <p>This website is designed to allow you to share beer tasting notes with others.  Through a simple interface, you can analyze the flavor, aroma, and mouthfeel of a beer, and share your notes via social networks (e.g., Facebook, Untappd, Twitter, Google+, etc)</p>
-        <p><a class="btn btn-primary btn-lg" data-toggle="collapse" data-target="#demo" onclick="getLocation()">Try it &raquo;</a></p>
-      </div>
-    </div>
-    
-    <div id="demo" class="container panel panel-default collapse">
+
+    <div id="demo" class="container panel panel-default">
         <div class="row panel-body">
             <div class="col-sm-4">
                 <div id="signinButton">
@@ -135,27 +106,27 @@
                   </span>
                 </div> <!--signinButton-->
                 <div id="userInfo" style="display:none;">
-                    <img id="avatar" data-src="holder.js/140x140" class="img-rounded" style="width: 50px; height: 50px;"\> 
-                    <span id="username"> </span> 
+                    <img id="avatar" data-src="holder.js/140x140" class="img-rounded" style="width: 50px; height: 50px;"\>
+                    <span id="username"> </span>
                 </div>
                 <p></p>
                 <div class="well">
                     <p><a href="#" onclick="mySession=new Session(); addLocation(mySession);"><span class="glyphicon glyphicon-plus"></span> New Tasting Session</a></p>
-                    <p><a href="#" onclick="getCurrentLocalSessions();"><span class="glyphicon glyphicon-globe"></span> Find Nearby Tasting Sessions</a></p>
-                    <p><a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a></p>
+                    <p><a href="#" onclick="getCurrentLocalSessions();"><span class="glyphicon glyphicon-globe"></span> Join Nearby Tasting Session</a></p>
                 </div>
-                <div>
-                    <a href="#" title="settings" id="settings"><span class="glyphicon glyphicon-wrench"></span> settings</a><br/>
-                    <a href="#" title="sign out" id="signoutButton" onclick="signoutCallback()"><span class="glyphicon glyphicon-log-out"></span> sign out</a>
+                <div id="signedIn">
+                	<a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a><br/>
+                    <a href="#" title="settings" id="settings"><span class="glyphicon glyphicon-wrench"></span> Settings</a><br/>
+                    <a href="#" title="sign out" id="signoutButton" onclick="signoutCallback()"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a>
                 </div>
             </div><!--col-->
             <div class="col-sm-4">
                 <span class="glyphicon glyphicon-user"></span> My Name:<br/>
                 <input type="edit" name="firstName" id="firstName" onchange="updateUserName()"/><br/>
-                
+
                 Beer Name:<br/>
                 <input type="edit" name="beerName" id="beerName" onchange="updateBeerName()"/><br/>
-                
+
                 <span class="glyphicon glyphicon-globe"></span> Location Name:<br/>
                 <input type="edit" name="locationName" id="locationName" onchange="updateLocationName()"/><br/>
                 <span id="location"> </span><br/>
@@ -164,223 +135,37 @@
             <div class="col-sm-4">
                 <h3><span class="glyphicon glyphicon-stats"></span> Sensory Analysis</h3>
                 Aroma:<br/>
-                <input type="range" name="aromaScore" id="aromaScore" min="0" max="12" value="0"/> 
-                <span id="aromaScoreVal">0</span> 
+                <input type="range" name="aromaScore" id="aromaScore" min="0" max="12" value="0"/>
+                <span id="aromaScoreVal">0</span>
                 <a href="#" title="edit details" data-toggle="modal" data-target="#aromaModal"><span class="glyphicon glyphicon-pencil"></span></a> <br/>
-                
-                <!-- aromaModal -->
-                <div class="modal fade" id="aromaModal" tabindex="-1" role="dialog" aria-labelledby="aromaModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="aromaModalLabel">Aroma</h4>
-                      </div>
-                      <div class="modal-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tr>
-                                    <th>Malt</th>
-                                    <td><input type="checkbox" name="aromaMaltNone" value=""> None</td>
-                                    <td><input type="range" name="aromaMaltScore" id="aromaMaltScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th>Hops</th>
-                                    <td><input type="checkbox" name="aromaHopsNone" value=""> None</td>
-                                    <td><input type="range" name="aromaHopsScore" id="aromaHopsScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th>Esters</th>
-                                    <td><input type="checkbox" name="aromaEstersNone" value=""> None</td>
-                                    <td><input type="range" name="aromaEstersScore" id="aromaEstersScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th>Phenols</th>
-                                    <td><input type="checkbox" name="aromaPhenolsNone" value=""> None</td>
-                                    <td><input type="range" name="aromaPhenolsScore" id="aromaPhenolsScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th>Alcohol</th>
-                                    <td><input type="checkbox" name="aromaAlcoholNone" value=""> None</td>
-                                    <td><input type="range" name="aromaAlcoholScore" id="aromaAlcoholScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th>Sweetness</th>
-                                    <td><input type="checkbox" name="aromaSweetnessNone" value=""> None</td>
-                                    <td><input type="range" name="aromaSweetnessScore" id="aromaSweetnessScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th>Acidity</th>
-                                    <td><input type="checkbox" name="aromaAcidityNone" value=""> None</td>
-                                    <td><input type="range" name="aromaAcidityScore" id="aromaAcidityScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                                <tr>
-                                    <th><input type="text" name="aromaOtherText"></th>
-                                    <td><input type="checkbox" name="aromaOtherNone" value=""> None</td>
-                                    <td><input type="range" name="aromaOtherScore" id="aromaOtherScore" min="1" max="5" value="1"/></td>
-                                </tr>
-                            </table>
-                        </div><!-- table-responsive -->
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr>
-                                    <th>Malt</th>
-                                    <th>Hops</th>
-                                    <th>Esters</th>
-                                    <th>Other</th>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltGrainy" value=""> Grainy</td>
-                                    <td><input type="checkbox" name="aromaHopsCitrusy" value=""> Citrusy</td>
-                                    <td><input type="checkbox" name="aromaEstersFruity" value=""> 'Fruity'</td>
-                                    <td><input type="checkbox" name="aromaOtherBrett" value=""> Brett.</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltCaramel" value=""> Caramel</td>
-                                    <td><input type="checkbox" name="aromaHopsEarthy" value=""> Earthy</td>
-                                    <td><input type="checkbox" name="aromaEstersApple" value=""> Apple/Pear</td>
-                                    <td><input type="checkbox" name="aromaOtherFruit" value=""> Fruit</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltBready" value=""> Bready</td>
-                                    <td><input type="checkbox" name="aromaHopsFloral" value=""> Floral</td>
-                                    <td><input type="checkbox" name="aromaEstersBanana" value=""> Banana</td>
-                                    <td><input type="checkbox" name="aromaOtherLactic" value=""> Lactic</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltRich" value=""> Rich</td>
-                                    <td><input type="checkbox" name="aromaHopsGrassy" value=""> Grassy</td>
-                                    <td><input type="checkbox" name="aromaEstersBerry" value=""> Berry</td>
-                                    <td><input type="checkbox" name="aromaOtherSmoke" value=""> Smoke</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltDarkFruit" value=""> Dark Fruit</td>
-                                    <td><input type="checkbox" name="aromaHopsHerbal" value=""> Herbal</td>
-                                    <td><input type="checkbox" name="aromaEstersCitrus" value=""> Citrus</td>
-                                    <td><input type="checkbox" name="aromaOtherSpice" value=""> Spice</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltToasty" value=""> Toasty</td>
-                                    <td><input type="checkbox" name="aromaHopsPiney" value=""> Piney</td>
-                                    <td><input type="checkbox" name="aromaEstersDriedFruit" value=""> Dried Fruit</td>
-                                    <td><input type="checkbox" name="aromaOtherVinous" value=""> Vinous</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltRoasty" value=""> Roasty</td>
-                                    <td><input type="checkbox" name="aromaHopsSpicy" value=""> Spicy</td>
-                                    <td><input type="checkbox" name="aromaEstersGrape" value=""> Grape</td>
-                                    <td><input type="checkbox" name="aromaOtherWood" value=""> Wood</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" name="aromaMaltBurnt" value=""> Burnt</td>
-                                    <td><input type="checkbox" name="aromaHopsWoody" value=""> Woody</td>
-                                    <td><input type="checkbox" name="aromaEstersStoneFruit" value=""> Stone Fruit</td>
-                                    <td><input type="checkbox" name="aromaOtherOther" value=""> _____</td>
-                                </tr>
-                            </table>
-                        </div><!-- table-responsive -->
-                        <div>
-                            <div class="pull-right">
-                                <input type="checkbox" name="aromaFlawed" value=""> flawed
-                            </div>
-                        </div>
-                        <div>
-                            <div class="pull-right">
-                                Total Aroma Score: 
-                                <input type="range" name="aromaScore2" id="aromaScore2" min="0" max="12" value="0"/> 
-                                <span id="aromaScoreVal2">0</span>
-                            </div>
-                        </div>
-                      </div><!-- modal-body-->
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
-                      </div>
-                    </div><!-- modal-content -->
-                  </div><!-- modal-dialog -->
-                </div><!-- aromaModal -->
-                
+
                 Appearance:<br/>
-                <input type="range" name="appearanceScore" id="appearanceScore" min="0" max="3" value="0"/> 
-                <span id="appearanceScoreVal">0</span> 
+                <input type="range" name="appearanceScore" id="appearanceScore" min="0" max="3" value="0"/>
+                <span id="appearanceScoreVal">0</span>
                 <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
-                
+
                 Flavor:<br/>
-                <input type="range" name="flavorScore" id="flavorScore" min="0" max="20" value="0"/> 
-                <span id="flavorScoreVal">0</span> 
+                <input type="range" name="flavorScore" id="flavorScore" min="0" max="20" value="0"/>
+                <span id="flavorScoreVal">0</span>
                 <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
-                
+
                 Mouthfeel:<br/>
-                <input type="range" name="mouthfeelScore" id="mouthfeelScore" min="0" max="5" value="0"/> 
-                <span id="mouthfeelScoreVal">0</span> 
+                <input type="range" name="mouthfeelScore" id="mouthfeelScore" min="0" max="5" value="0"/>
+                <span id="mouthfeelScoreVal">0</span>
                 <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
-                
+
                 Overall Impression:<br/>
-                <input type="range" name="impressionScore" id="impressionScore" min="0" max="10" value="0"/> 
-                <span id="impressionScoreVal">0</span> 
+                <input type="range" name="impressionScore" id="impressionScore" min="0" max="10" value="0"/>
+                <span id="impressionScoreVal">0</span>
                 <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
-                
+
                 TOTAL: <span id="totalScore">0</span>
-                
-                <!-- 
-                maybe implement a callback for each input field that posts JSON to a PHP file?
-                https://api.jquery.com/jQuery.post/
-                -->
-                
-                <!--
-                Use Firebase API: https://www.firebase.com/docs/
-                [Note: free account allows 50 concurrent connections]
-                
-                Hurray! You just created a Firebase named 'beersense' - your data will be located at:
-                    https://beersense.firebaseio.com/
-                
-                To get started, you'll need to include this snippet of JavaScript in the <head> tag of your web pages:
-                    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
-                
-                You can then write data into Firebase like this:
-                    var dataRef = new Firebase("https://beersense.firebaseio.com");
-                    dataRef.set("I am now writing data into Firebase!");
-                -->
-                
-                <!--
-                Add ability to see (in real-time) what others are saying?
-                -->
-                
-                <!--
-                Note that Firebase offers facebook/twitter/email auth
-                http://firebase.github.io/firebase-simple-login/
-                -->
-                
+
             </div><!--col-->
         </div><!--row-->
     </div><!--demo-->
 
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-sm-4">
-          <h2>Learn</h2>
-          <p>Learn about beer styles, brewing processes, and the variety of aromas and tastes that you might encounter.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="col-sm-4">
-          <h2>Share</h2>
-          <p>Share your tasting notes with friends via your favorite social network.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="col-sm-4">
-          <h2>Practice</h2>
-          <p>Are you a beer judge, or do you want to become one?  Use this app to practice judging beers.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
 
-      <hr>
-
-      <footer>
-        <p>&copy; Jon Boley 2014</p>
-      </footer>
-    </div> <!-- /container -->        
-    
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 
@@ -400,7 +185,7 @@
 </script>
 
 <script>
-    function updateTotalScore(){                 
+    function updateTotalScore(){
        var newVal = 0;
        newVal += $('#aromaScore').val()/1;
        newVal += $('#appearanceScore').val()/1;
@@ -409,49 +194,49 @@
        newVal += $('#impressionScore').val()/1;
        $("#totalScore").html(newVal);
     }
-    
-    $("#aromaScore").change(function () {                  
+
+    $("#aromaScore").change(function () {
        var newValue = $('#aromaScore').val();
        $("#aromaScoreVal").html(newValue);
        updateTotalScore();
-       
+
        console.log('Saving new aroma score ('+newValue+') to session ('+thisSession.id+')');
        thisSession.set("aromaScore", newValue);
        thisSession.save();
     });
-    
-    $("#appearanceScore").change(function () {                 
+
+    $("#appearanceScore").change(function () {
        var newValue = $('#appearanceScore').val();
        $("#appearanceScoreVal").html(newValue);
        updateTotalScore();
-       
+
        thisSession.set("appearanceScore", newValue);
        thisSession.save();
     });
-    
-    $("#flavorScore").change(function () {                 
+
+    $("#flavorScore").change(function () {
        var newValue = $('#flavorScore').val();
        $("#flavorScoreVal").html(newValue);
        updateTotalScore();
-       
+
        thisSession.set("flavorScore", newValue);
        thisSession.save();
     });
-    
-    $("#mouthfeelScore").change(function () {                  
+
+    $("#mouthfeelScore").change(function () {
        var newValue = $('#mouthfeelScore').val();
        $("#mouthfeelScoreVal").html(newValue);
        updateTotalScore();
-       
+
        thisSession.set("mouthfeelScore", newValue);
        thisSession.save();
     });
-    
-    $("#impressionScore").change(function () {                 
+
+    $("#impressionScore").change(function () {
        var newValue = $('#impressionScore').val();
        $("#impressionScoreVal").html(newValue);
        updateTotalScore();
-       
+
        thisSession.set("impressionScore", newValue);
        thisSession.save();
     });
@@ -471,7 +256,7 @@
       }
     function showError(error)
       {
-      switch(error.code) 
+      switch(error.code)
         {
         case error.PERMISSION_DENIED:
           x.innerHTML = "Please enable geolocation to use social features."
@@ -495,7 +280,7 @@
       mapholder=document.getElementById('mapholder')
       mapholder.style.height='200px';
       mapholder.style.width='200px';
-    
+
       var myOptions={
       center:latlon,zoom:14,
       mapTypeId:google.maps.MapTypeId.ROADMAP,
@@ -514,10 +299,10 @@
     Parse.initialize("2vvcjlkKTVA3N8cKf03QiWdgLGQWmXAzNwXwPTt1", "bIo0Milr9axpuGCSFLOXR0jN2Y4dUOJlUr8JBdY3");
     // Beer Sense:
     //Parse.initialize("OwAR25EdrsgZE6fPdlws5czLrtoYxtV1ym9Uyys1", "6LGiPcWb2TggJAEdjQPzIyXtzyFlpCOY1tISoZYF");
-    
+
     var Session = Parse.Object.extend("Session");
     thisSession = new Session(); // default to starting new Session
-    
+
     function addLocation(sessionObj) {
         console.log('Getting geolocation...');
         if (navigator.geolocation){
@@ -537,7 +322,7 @@
             x.innerHTML = "Geolocation is not supported by this browser.";
         }
       }
-    
+
     function saveSession(sessionObj){
     sessionObj.save(null, {
       success: function(sessionObj) {
@@ -551,7 +336,7 @@
       }
     });
     }
-    
+
     function getCurrentLocalSessions(){
         console.log('Getting geolocation...');
         if (navigator.geolocation){
@@ -574,7 +359,7 @@
                   success: function(nearbySessions) {
                       console.log('Recent nearby sessions: ');
                       for (var i=0; i<nearbySessions.length; i++)
-                        { 
+                        {
                         console.log('  ' + nearbySessions[i].id);
                         }
                   }
@@ -584,14 +369,14 @@
             console.log('Geolocation is not supported by this browser');
             x.innerHTML = "Geolocation is not supported by this browser.";
         }
-        
+
     }
-        
+
     function createDefaultUser(){
         var user = new Parse.User();
         user.set("username", "AnonymousUser");
         user.set("password", "fakepassword");
-         
+
         user.signUp(null, {
           success: function(user) {
             console.log('User created: ' + user.username);
@@ -602,7 +387,7 @@
           }
         });
     }
-    
+
     function defaultUserLogin(){
         console.log('Logging in default user...');
         Parse.User.logIn("AnonymousUser", "fakepassword", {
@@ -614,11 +399,11 @@
           }
         });
     }
-    
+
     // use this to log a user out:
     // Parse.User.logOut();
     // if external account is used, log out default user and log in new (create new if needed)
-    
+
 </script>
 
     </body>

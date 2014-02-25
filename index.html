@@ -6,9 +6,12 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>Beer Sense</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+
+        <script src="js/vendor/pace/pace.js"></script>
+  		<link href="js/vendor/pace/pace-theme-center-simple.css" rel="stylesheet" />
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
@@ -122,7 +125,7 @@
 
 
 	<div class="container">
-		<h1>Web-Based Sensory Analysis</h1>
+		<h1><small>Web-Based Sensory Analysis</small></h1>
 
 	</div>
 
@@ -144,13 +147,13 @@
                     <span id="username"> </span>
                 </div>
                 <p></p>
-                <div class="well">
+                <div class="well well-sm" style="margin-right:30px;">
                     <p><a href="#" onclick="mySession=new Session(); addLocation(mySession);"><span class="glyphicon glyphicon-plus"></span> New Tasting Session</a></p>
-                    <p><a href="#" onclick="getCurrentLocalSessions();" data-toggle="collapse" href="#sessionList"><span class="glyphicon glyphicon-globe"></span> Join Nearby Tasting Session</a></p>
-                    <p style="margin-left:25px;"><span id="sessionList"></span></p>
+                    <p><a href="#" onclick="getCurrentLocalSessions();"><span class="glyphicon glyphicon-globe"></span> Join Nearby Session</a></p>
+                    <div id="sessionList"></div>
                 </div>
-                <div id="signedIn">
-                	<a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a><br/>
+                <div id="signedIn" style="display:none;">
+                	<a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a> <span id="numSessions" class="badge"></span><br/>
                     <a href="#" title="settings" id="settings"><span class="glyphicon glyphicon-wrench"></span> Settings</a><br/>
                     <a href="#" title="sign out" id="signoutButton" onclick="signoutCallback()"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a><br/>
                 </div>
@@ -354,7 +357,7 @@
        thisSession.set("tasters", tasters);
        //thisSession.set("impressionScore", newValue);
        saveSession(); //thisSession.save();
-       console.log('Saved '+tasters[thisUserIndex].name+'\\\'s overall impression score ('+newValue+') to session ('+thisSession.id+')');
+       console.log('Saved '+tasters[thisUserIndex].name+'\'s overall impression score ('+newValue+') to session ('+thisSession.id+')');
     });
 </script>
 
@@ -413,32 +416,44 @@
                 query.withinKilometers("location", userGeoPoint, 1); // order may be weird
                 query.near("location", userGeoPoint);
                 // Limit what could be a lot of points.
-                //query.limit(10);
+                query.limit(10);
                 // Final list of objects
                 query.find({
                   success: function(nearbySessions) {
+                  	  console.log('Search succeeded');
                   	  var sessionList = document.getElementById("sessionList");
-                  	  sessionList.innerHTML = '<ul>';
-                      console.log('Recent nearby sessions: ');
-                      for (var i=0; i<nearbySessions.length; i++)
-                        {
-                        console.log('  ' + nearbySessions[i].id);
-                        var query = new Parse.Query(Session);
-						query.get(nearbySessions[i].id, {
-						  success: function(nearbySession) {
-							sessionList.innerHTML = sessionList.innerHTML + '<li><a href="#" id="'+nearbySession.id+'">' + nearbySession.get("beerName") + ' @ ' + nearbySession.get("locationName") +' w/ '+ nearbySession.get("tasters")[0].name + '</a></li>';
-						  },
-						  error: function(object, error) {
-							// The object was not retrieved successfully.
-							// error is a Parse.Error with an error code and description.
-							console.log('Error retrieving session.  Error code: '+error);
-						  }
-						});
-                        }
-                        sessionList.innerHTML = sessionList.innerHTML + '</ul>';
-                  }
-                });
-            });
+                  	  if (nearbySessions.length>0){
+						  document.getElementById("sessionList").className = "list-group";
+						  //sessionList.innerHTML = '<div class="list-group">';
+						  console.log('Recent nearby sessions: ');
+						  for (var i=0; i<nearbySessions.length; i++)
+							{
+							console.log('  ' + nearbySessions[i].id);
+							var query = new Parse.Query(Session);
+							query.get(nearbySessions[i].id, {
+							  success: function(nearbySession) {
+								sessionList.innerHTML = sessionList.innerHTML + '<a href="#" id="'+nearbySession.id+'" class="list-group-item">' + nearbySession.get("beerName") + ' @ ' + nearbySession.get("locationName") +' w/ '+ nearbySession.get("tasters")[0].name + '</a>';
+							  }, // success
+							  error: function(object, error) {
+								// The object was not retrieved successfully.
+								// error is a Parse.Error with an error code and description.
+								console.log('Error retrieving session.  Error code: '+error);
+							  } // error
+							}); // query.get
+							} // for
+							//sessionList.innerHTML = sessionList.innerHTML + '</div>';
+                        } // if
+                        else{
+                        	console.log('No sessions found');
+							document.getElementById("sessionList").className = "alert alert-warning";
+							document.getElementById("sessionList").innerHTML = "Sorry, there aren't any sessions in your area right now... but feel free to start one!";
+                        } // else
+                  }, // query.find success
+				  error: function(error) {
+				    console.log('Search failed. Error: '+error);
+				  } // query.find error
+                }); // query.find
+            }); // getCurrentPosition
         }else{
             console.log('Geolocation is not supported by this browser');
             x.innerHTML = "Geolocation is not supported by this browser.";

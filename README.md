@@ -6,4 +6,6 @@ Front-end for Beer Sense web app
 
 This web app is designed to allow you to share beer tasting notes with others.  Through a simple interface, you can analyze the flavor, aroma, and mouthfeel of a beer, and share your notes via social networks (e.g., Facebook, Untappd, Twitter, Google+, etc)
 
-Uses [Parse](https://parse.com/products/core) as a back end
+Beer Sense uses [Parse](https://parse.com/products/core) as a back end
+
+We use [HuBoard](https://huboard.com/Sensory-Web/Beer-Sense) to organize & prioritize issues

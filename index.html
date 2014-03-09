@@ -149,7 +149,7 @@
                 <p></p>
                 <div class="well well-sm" style="margin-right:30px;">
                     <p><a href="#" onclick="mySession=new Session(); addLocation(mySession);"><span class="glyphicon glyphicon-plus"></span> New Tasting Session</a></p>
-                    <p><a href="#" onclick="getCurrentLocalSessions();"><span class="glyphicon glyphicon-globe"></span> Join Nearby Session</a></p>
+                    <p><span class="glyphicon glyphicon-globe"></span> Join Nearby Session (<a href="#" onclick="getCurrentLocalSessions();">refresh list</a>)</p>
                     <div id="sessionList"></div>
                 </div>
                 <div id="signedIn" style="display:none;">
@@ -424,6 +424,7 @@
                   	  var sessionList = document.getElementById("sessionList");
                   	  if (nearbySessions.length>0){
 						  document.getElementById("sessionList").className = "list-group";
+						  sessionList.innerHTML = '';
 						  //sessionList.innerHTML = '<div class="list-group">';
 						  console.log('Recent nearby sessions: ');
 						  for (var i=0; i<nearbySessions.length; i++)

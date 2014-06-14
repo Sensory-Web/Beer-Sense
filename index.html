@@ -3,117 +3,48 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Beer Sense</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Beer Sense</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
 
-        <script src="js/vendor/pace/pace.js"></script>
-  		<link href="js/vendor/pace/pace-theme-center-simple.css" rel="stylesheet" />
+    <script src="js/vendor/pace/pace.js"></script>
+    <link href="js/vendor/pace/pace-theme-center-simple.css" rel="stylesheet" />
 
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <style>
-            body {
-                padding-top: 50px;
-                padding-bottom: 20px;
-            }
-        </style>
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+      body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+      }
+    </style>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
 
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 
-        <!-- Google Sign-In -->
-        <!-- Place this asynchronous JavaScript just before your </body> tag -->
-        <script type="text/javascript">
-          (function() {
-           var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-           po.src = 'https://apis.google.com/js/client:plusone.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-         })();
-        </script>
+    <script src="js/location.js"></script>
 
-        <!-- Google Sign-In -->
-        <script>
-            function signinCallback(authResult) {
-                gapi.client.load('plus', 'v1');
-                if (authResult['status']['signed_in']) {
-                // Update the app to reflect a signed in user
-                // Hide the sign-in button now that the user is authorized, for example:
-                document.getElementById('signinButton').setAttribute('style', 'display:none');
-                document.getElementById('signedIn').setAttribute('style', 'display:inline');
+    <!-- Parse API -->
+    <script src="//www.parsecdn.com/js/parse-1.2.16.min.js"></script>
 
-                // This sample assumes a client object has been created.
-                // To learn more about creating a client, check out the starter:
-                //  https://developers.google.com/+/quickstart/javascript
-                var request = gapi.client.plus.people.get({'userId' : 'me'});
-
-                request.execute(function(resp) {
-                    console.log('ID: ' + resp.id);
-                    console.log('Display Name: ' + resp.displayName);
-                    console.log('Image URL: ' + resp.image.url);
-                    console.log('Profile URL: ' + resp.url);
-
-                    document.getElementById('userInfo').setAttribute('style', 'display:inline');
-                    document.getElementById('avatar').setAttribute('src', resp.image.url);
-                    document.getElementById('username').innerHTML=resp.displayName;
-                    document.getElementById('firstName').setAttribute('value', resp.name.givenName);
-                });
-                } else {
-                // Update the app to reflect a signed out user
-                // Possible error values:
-                //   "user_signed_out" - User is signed-out
-                //   "access_denied" - User denied access to your app
-                //   "immediate_failed" - Could not automatically log in the user
-                console.log('Sign-in state: ' + authResult['error']);
-                document.getElementById('signinButton').setAttribute('style', 'display:inline');
-                document.getElementById('signedIn').setAttribute('style', 'display:none');
-
-                document.getElementById('userInfo').setAttribute('style', 'display:none');
-                document.getElementById('avatar').setAttribute('src', '');
-                document.getElementById('username').innerHTML="";
-                document.getElementById('firstName').setAttribute('value', '');
-                }
-                }
-            function signoutCallback(){
-                gapi.auth.signOut();
-                }
-        </script>
-
-		<script>
-			function getLocation() {
-				console.log('Getting geolocation...');
-				if (navigator.geolocation){
-					navigator.geolocation.getCurrentPosition(function(position){
-						latVal=position.coords.latitude;
-						longVal=position.coords.longitude;
-						console.log('Latitude: ' + latVal);
-						console.log('Longitude: ' + longVal);
-						var point = new Parse.GeoPoint({latitude: latVal, longitude: longVal});
-						thisSession.set("location", point);
-						//sessionObj.save(null).then(function(object) {
-						//  console.log('Geolocation saved to session id: ' + sessionObj.id);
-						//})
-					});
-				}else{
-					console.log('Geolocation is not supported by this browser');
-				}
-			  }
-		</script>
-
-        <!-- Firebase API
-        <script src="https://cdn.firebase.com/v0/firebase.js"></script>
-        -->
-
-        <!-- Parse API -->
-        <script src="//www.parsecdn.com/js/parse-1.2.16.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+    <!-- Google Sign-In -->
+    <!-- Place this asynchronous JavaScript just before your </body> tag -->
+    <script type="text/javascript">
+      (function() {
+       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+       po.src = 'https://apis.google.com/js/client:plusone.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
+    </script>
+    <script src="js/googleSignIn.js"></script>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
 
 	<div class="navbar navbar-inverse navbar-fixed-top">
 	  <div class="container">
@@ -125,397 +56,96 @@
 
 
 	<div class="container">
-		<h1><small>Web-Based Sensory Analysis</small></h1>
-
+      <h1><small>Web-Based Sensory Analysis</small></h1>
 	</div>
 
     <div id="demo" class="container panel panel-default">
-        <div class="row panel-body">
-            <div class="col-sm-4">
-                <div id="signinButton">
-                  <span
-                    class="g-signin"
-                    data-callback="signinCallback"
-                    data-clientid="268984396909-tcroqtja1g8vi639b8b33j1thgsntl9e.apps.googleusercontent.com"
-                    data-cookiepolicy="single_host_origin"
-                    data-requestvisibleactions="http://schemas.google.com/AddActivity"
-                    data-scope="https://www.googleapis.com/auth/plus.login">
-                  </span>
-                </div> <!--signinButton-->
-                <div id="userInfo" style="display:none;">
-                    <img id="avatar" data-src="holder.js/140x140" class="img-rounded" style="width: 50px; height: 50px;"\>
-                    <span id="username"> </span>
-                </div>
-                <p></p>
-                <div class="well well-sm" style="margin-right:30px;">
-                    <p><a href="#" onclick="mySession=new Session(); addLocation(mySession);"><span class="glyphicon glyphicon-plus"></span> New Tasting Session</a></p>
-                    <p><span class="glyphicon glyphicon-globe"></span> Join Nearby Session (<a href="#" onclick="getCurrentLocalSessions();">refresh list</a>)</p>
-                    <div id="sessionList"></div>
-                </div>
-                <div id="signedIn" style="display:none;">
-                	<a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a> <span id="numSessions" class="badge"></span><br/>
-                    <a href="#" title="settings" id="settings"><span class="glyphicon glyphicon-wrench"></span> Settings</a><br/>
-                    <a href="#" title="sign out" id="signoutButton" onclick="signoutCallback()"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a><br/>
-                </div>
-            </div><!--col-->
-            <div class="col-sm-4">
-                <span class="glyphicon glyphicon-user"></span> My Name:<br/>
-                <input type="edit" name="firstName" id="firstName" onchange="updateUserName()"/><br/>
+      <div class="row panel-body">
+        <div class="col-sm-4">
+          <div id="signinButton">
+            <span
+              class="g-signin"
+              data-callback="signinCallback"
+              data-clientid="268984396909-tcroqtja1g8vi639b8b33j1thgsntl9e.apps.googleusercontent.com"
+              data-cookiepolicy="single_host_origin"
+              data-requestvisibleactions="http://schemas.google.com/AddActivity"
+              data-scope="https://www.googleapis.com/auth/plus.login">
+            </span>
+          </div> <!--signinButton-->
+          <div id="userInfo" style="display:none;">
+            <img id="avatar" data-src="holder.js/140x140" class="img-rounded" style="width: 50px; height: 50px;">
+            <span id="username"> </span>
+          </div>
+          <p></p>
+          <div class="well well-sm" style="margin-right:30px;">
+            <p><a href="#" onclick="mySession=new Session(); addLocation(mySession);"><span class="glyphicon glyphicon-plus"></span> New Tasting Session</a></p>
+            <p><span class="glyphicon glyphicon-globe"></span> Join Nearby Session (<a href="#" onclick="getCurrentLocalSessions();">refresh list</a>)</p>
+            <div id="sessionList"></div>
+          </div>
+          <div id="signedIn" style="display:none;">
+            <a href="#" onclick="showMySessions();"><span class="glyphicon glyphicon-list"></span> My Tasting Sessions</a> <span id="numSessions" class="badge"></span><br/>
+            <a href="#" title="settings" id="settings"><span class="glyphicon glyphicon-wrench"></span> Settings</a><br/>
+            <a href="#" title="sign out" id="signoutButton" onclick="signoutCallback()"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a><br/>
+          </div>
+        </div><!--col-->
+        <div class="col-sm-4">
+          <span class="glyphicon glyphicon-user"></span> My Name:<br/>
+          <input type="text" name="firstName" id="firstName" onchange="updateUserName()"/><br/>
 
-                Beer Name:<br/>
-                <input type="edit" name="beerName" id="beerName" onchange="updateBeerName()"/><br/>
+          Beer Name:<br/>
+          <input type="text" name="beerName" id="beerName" onchange="updateBeerName()"/><br/>
 
-                <span class="glyphicon glyphicon-globe"></span> Location Name:<br/>
-                <input type="edit" name="locationName" id="locationName" onchange="updateLocationName()"/><br/>
-                <span id="location"> </span><br/>
-                <div id="mapholder"> </div><br/>
-            </div><!--col-->
-            <div class="col-sm-4">
-                <h3><span class="glyphicon glyphicon-stats"></span> Sensory Analysis</h3>
-                Aroma:<br/>
-                <input type="range" name="aromaScore" id="aromaScore" min="0" max="12" value="0"/>
-                <span id="aromaScoreVal">0</span>
-                <a href="#" title="edit details" data-toggle="modal" data-target="#aromaModal"><span class="glyphicon glyphicon-pencil"></span></a> <br/>
+          <span class="glyphicon glyphicon-globe"></span> Location Name:<br/>
+          <input type="text" name="locationName" id="locationName" onchange="updateLocationName()"/><br/>
+          <span id="location"> </span><br/>
+          <div id="mapholder"> </div><br/>
+        </div><!--col-->
+        <div class="col-sm-4">
+          <h3><span class="glyphicon glyphicon-stats"></span> Sensory Analysis</h3>
+          Aroma:<br/>
+          <input type="range" name="aromaScore" id="aromaScore" min="0" max="12" value="0"/>
+          <span id="aromaScoreVal">0</span>
+          <a href="#" title="edit details" data-toggle="modal" data-target="#aromaModal"><span class="glyphicon glyphicon-pencil"></span></a> <br/>
 
-                Appearance:<br/>
-                <input type="range" name="appearanceScore" id="appearanceScore" min="0" max="3" value="0"/>
-                <span id="appearanceScoreVal">0</span>
-                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+          Appearance:<br/>
+          <input type="range" name="appearanceScore" id="appearanceScore" min="0" max="3" value="0"/>
+          <span id="appearanceScoreVal">0</span>
+          <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
 
-                Flavor:<br/>
-                <input type="range" name="flavorScore" id="flavorScore" min="0" max="20" value="0"/>
-                <span id="flavorScoreVal">0</span>
-                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+          Flavor:<br/>
+          <input type="range" name="flavorScore" id="flavorScore" min="0" max="20" value="0"/>
+          <span id="flavorScoreVal">0</span>
+          <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
 
-                Mouthfeel:<br/>
-                <input type="range" name="mouthfeelScore" id="mouthfeelScore" min="0" max="5" value="0"/>
-                <span id="mouthfeelScoreVal">0</span>
-                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+          Mouthfeel:<br/>
+          <input type="range" name="mouthfeelScore" id="mouthfeelScore" min="0" max="5" value="0"/>
+          <span id="mouthfeelScoreVal">0</span>
+          <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
 
-                Overall Impression:<br/>
-                <input type="range" name="impressionScore" id="impressionScore" min="0" max="10" value="0"/>
-                <span id="impressionScoreVal">0</span>
-                <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
+          Overall Impression:<br/>
+          <input type="range" name="impressionScore" id="impressionScore" min="0" max="10" value="0"/>
+          <span id="impressionScoreVal">0</span>
+          <a href="#" title="edit details"><span class="glyphicon glyphicon-pencil"></span></a><br/>
 
-                TOTAL: <span id="totalScore">0</span>
-
-            </div><!--col-->
-        </div><!--row-->
+          TOTAL: <span id="totalScore">0</span>
+        </div><!--col-->
+      </div><!--row-->
     </div><!--demo-->
 
+    <!-- LOAD SCRIPTS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="js/vendor/bootstrap.min.js"></script>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="js/main.js"></script>
+    <script src="js/initSession.js"></script>
+    <script src="js/updateData.js"></script>
 
-<script src="js/vendor/bootstrap.min.js"></script>
-
-<script src="js/main.js"></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38494371-2', 'perceptualentropy.com');
-  ga('send', 'pageview');
-
-</script>
-
-<script>
-	// initialize code to use Parse API
-	console.log('Initializing Parse API...');
-	// Test2:
-	Parse.initialize("WmkPV6MSBNixJobppXdtD7uyNnYxVO0zWVO4RtKM", "uoK47XfupjtOXRx5NTO0q23mH8eTnkc3SMH9JGpe");
-	// Beer Sense:
-	//Parse.initialize("OwAR25EdrsgZE6fPdlws5czLrtoYxtV1ym9Uyys1", "6LGiPcWb2TggJAEdjQPzIyXtzyFlpCOY1tISoZYF");
-
-	var Session = Parse.Object.extend("Session");
-	thisSession = new Session(); // default to starting new Session (not saved to Parse yet though)
-	getLocation();
-	var thisUserIndex = 0; // first user
-
-	var tasters = [
-		{"name":"(no name)",
-		 "aromaScore":0,
-		 "aromaScore":0,
-		 "flavorScore":0,
-		 "flavorScore":0,
-		 "impressionScore":0},
-	];
-	thisSession.set("tasters", tasters);
-
-
-	/*****************
-	* sample JSON code *
-	var employees = [
-	{ "firstName" : "John" , "lastName" : "Doe" },
-	{ "firstName" : "Anna" , "lastName" : "Smith" },
-	{ "firstName" : "Peter" , "lastName" : "Jones" }, ];
-	document.getElementById("origname").innerHTML=employees[0].firstName + " " + employees[0].lastName;
-
-	// Set new name
-	employees[0].firstName="Gilbert";
-	document.getElementById("newname").innerHTML=employees[0].firstName + " " + employees[0].lastName;
-	*******************/
-
-
-
-    function updateUserName(){
-    	var username = $('#firstName').val();
-    	console.log('thisUserIndex: '+thisUserIndex);
-    	console.log('tasters: '+tasters);
-    	tasters[thisUserIndex].name = username;
-
-		thisSession.set("tasters", tasters);
-		//saveSession(); //thisSession.save();
-		//console.log('Saved username ('+username+') to session ('+thisSession.id+')');
-    }
-
-    function updateBeerName(){
-    	var beerName = $('#beerName').val();
-
-		thisSession.save(); // beer has been named, so save (& get session ID)
-
-		thisSession.set("beerName", beerName);
-		saveSession(); //thisSession.save();
-		console.log('Saved beer ('+beerName+') to session ('+thisSession.id+')');
-    }
-
-    function updateLocationName(){
-    	var locationName = $('#locationName').val();
-
-		thisSession.set("locationName", locationName);
-		saveSession(); //thisSession.save();
-		console.log('Saved location ('+locationName+') to session ('+thisSession.id+')');
-    }
-
-    function updateTotalScore(){
-       var newVal = 0;
-       newVal += $('#aromaScore').val()/1;
-       newVal += $('#appearanceScore').val()/1;
-       newVal += $('#flavorScore').val()/1;
-       newVal += $('#mouthfeelScore').val()/1;
-       newVal += $('#impressionScore').val()/1;
-       $("#totalScore").html(newVal);
-    }
-
-    $("#aromaScore").change(function () {
-       var newValue = $('#aromaScore').val();
-       $("#aromaScoreVal").html(newValue);
-       updateTotalScore();
-
-       tasters[thisUserIndex].aromaScore = newValue;
-       thisSession.set("tasters", tasters);
-       //thisSession.set("aromaScore", newValue);
-       saveSession(); //thisSession.save();
-       console.log('Saved new aroma score ('+newValue+') to session ('+thisSession.id+')');
-    });
-
-    $("#appearanceScore").change(function () {
-       var newValue = $('#appearanceScore').val();
-       $("#appearanceScoreVal").html(newValue);
-       updateTotalScore();
-
-       tasters[thisUserIndex].appearanceScore = newValue;
-       thisSession.set("tasters", tasters);
-       //thisSession.set("appearanceScore", newValue);
-       saveSession(); //thisSession.save();
-       console.log('Saved new appearance score ('+newValue+') to session ('+thisSession.id+')');
-    });
-
-    $("#flavorScore").change(function () {
-       var newValue = $('#flavorScore').val();
-       $("#flavorScoreVal").html(newValue);
-       updateTotalScore();
-
-       tasters[thisUserIndex].flavorScore = newValue;
-       thisSession.set("tasters", tasters);
-       //thisSession.set("flavorScore", newValue);
-       saveSession(); //thisSession.save();
-       console.log('Saved new flavor score ('+newValue+') to session ('+thisSession.id+')');
-    });
-
-    $("#mouthfeelScore").change(function () {
-       var newValue = $('#mouthfeelScore').val();
-       $("#mouthfeelScoreVal").html(newValue);
-       updateTotalScore();
-
-       tasters[thisUserIndex].mouthfeelScore = newValue;
-       thisSession.set("tasters", tasters);
-       //thisSession.set("mouthfeelScore", newValue);
-       saveSession(); //thisSession.save();
-       console.log('Saved new mouthfeel score ('+newValue+') to session ('+thisSession.id+')');
-    });
-
-    $("#impressionScore").change(function () {
-       var newValue = $('#impressionScore').val();
-       $("#impressionScoreVal").html(newValue);
-       updateTotalScore();
-
-       tasters[thisUserIndex].impressionScore = newValue;
-       thisSession.set("tasters", tasters);
-       //thisSession.set("impressionScore", newValue);
-       saveSession(); //thisSession.save();
-       console.log('Saved '+tasters[thisUserIndex].name+'\'s overall impression score ('+newValue+') to session ('+thisSession.id+')');
-    });
-</script>
-
-<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-
-<script>
-    function showPosition(position)
-      {
-      lat=position.coords.latitude;
-      lon=position.coords.longitude;
-      latlon=new google.maps.LatLng(lat, lon)
-      mapholder=document.getElementById('mapholder')
-      mapholder.style.height='200px';
-      mapholder.style.width='200px';
-
-      var myOptions={
-      center:latlon,zoom:14,
-      mapTypeId:google.maps.MapTypeId.ROADMAP,
-      mapTypeControl:false,
-      navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
-      };
-      var map=new google.maps.Map(document.getElementById("mapholder"),myOptions);
-      var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
-      }
-</script>
-
-<script>
-    function saveSession(){
-    thisSession.save(null, {
-      success: function(sessionObj) {
-        console.log('Session saved ('+sessionObj.id+')');
-      },
-      error: function(sessionObj, error) {
-        console.log('Failed to save session [error code: '+error.description+']');
-      }
-    });
-    }
-
-    function getCurrentLocalSessions(){
-        console.log('Getting geolocation...');
-        if (navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(function(position){
-                latVal=position.coords.latitude;
-                longVal=position.coords.longitude;
-                console.log('Latitude: ' + latVal);
-                console.log('Latitude: ' + longVal);
-                // User's location
-                var userGeoPoint = new Parse.GeoPoint({latitude: latVal, longitude: longVal});
-                var now = new Date();
-                var halfHourAgo = new Date(now-(1800*1000));
-                // Create a query for places
-                var query = new Parse.Query(Session);
-                query.descending("updatedAt");
-                query.greaterThan("updatedAt",halfHourAgo);
-                // Interested in locations near user.
-                query.withinKilometers("location", userGeoPoint, 1); // order may be weird
-                query.near("location", userGeoPoint);
-                // Limit what could be a lot of points.
-                query.limit(10);
-                // Final list of objects
-                query.find({
-                  success: function(nearbySessions) {
-                  	  console.log('Search succeeded');
-                  	  var sessionList = document.getElementById("sessionList");
-                  	  if (nearbySessions.length>0){
-						  document.getElementById("sessionList").className = "list-group";
-						  sessionList.innerHTML = '';
-						  //sessionList.innerHTML = '<div class="list-group">';
-						  console.log('Recent nearby sessions: ');
-						  for (var i=0; i<nearbySessions.length; i++)
-							{
-							console.log('  ' + nearbySessions[i].id);
-							var query = new Parse.Query(Session);
-							query.get(nearbySessions[i].id, {
-							  success: function(nearbySession) {
-								sessionList.innerHTML = sessionList.innerHTML + '<a href="#" id="'+nearbySession.id+'" class="list-group-item">' + nearbySession.get("beerName") + ' @ ' + nearbySession.get("locationName") +' w/ '+ nearbySession.get("tasters")[0].name + '</a>';
-							  }, // success
-							  error: function(object, error) {
-								// The object was not retrieved successfully.
-								// error is a Parse.Error with an error code and description.
-								console.log('Error retrieving session.  Error code: '+error);
-							  } // error
-							}); // query.get
-							} // for
-							//sessionList.innerHTML = sessionList.innerHTML + '</div>';
-                        } // if
-                        else{
-                        	console.log('No sessions found');
-							document.getElementById("sessionList").className = "alert alert-warning";
-							document.getElementById("sessionList").innerHTML = "Sorry, there aren't any sessions in your area right now... but feel free to start one!";
-                        } // else
-                  }, // query.find success
-				  error: function(error) {
-				    console.log('Search failed. Error: '+error);
-				  } // query.find error
-                }); // query.find
-            }); // getCurrentPosition
-        }else{
-            console.log('Geolocation is not supported by this browser');
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-
-    }
-
-    function createDefaultUser(){
-        var user = new Parse.User();
-        user.set("username", "AnonymousUser");
-        user.set("password", "fakepassword");
-
-        user.signUp(null, {
-          success: function(user) {
-            console.log('User created: ' + user.username);
-          },
-          error: function(user, error) {
-            // Show the error message somewhere and let the user try again.
-            alert("Error: " + error.code + " " + error.message);
-          }
-        });
-    }
-
-    function defaultUserLogin(){
-        console.log('Logging in default user...');
-        Parse.User.logIn("AnonymousUser", "fakepassword", {
-          success: function(user) {
-            console.log('User logged in: ' + user.username);
-          },
-          error: function(user, error) {
-            console.log('Failed to log in user: ' + user.username);
-          }
-        });
-    }
-
-    // use this to log a user out:
-    // Parse.User.logOut();
-    // if external account is used, log out default user and log in new (create new if needed)
-
-</script>
-
-<script>
-	function getDistance(lat1,lon1,lat2,lon2) {
-	  //var R = 6371; // Radius of the earth in km
-	  var R = 3959; // Radius of the earth in mi
-	  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-	  var dLon = deg2rad(lon2-lon1);
-	  var a =
-	    Math.sin(dLat/2) * Math.sin(dLat/2) +
-	    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-	    Math.sin(dLon/2) * Math.sin(dLon/2)
-	    ;
-	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-	  var d = R * c; // Distance
-	  return d;
-	}
-
-	function deg2rad(deg) {
-	  return deg * (Math.PI/180)
-	}
-</script>
-
-    </body>
+    <!-- Load Google Maps API -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    
+    <script src="js/session.js"></script>
+    <script src="js/user.js"></script>    
+    <script src="js/analytics.js"></script>
+  </body>
 </html>

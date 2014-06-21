@@ -6,11 +6,11 @@
     "url": "http://github.com/Sensory-Web/Beer-Sense.git"
     },
   "devDependencies": {
-    "karma": "~0.10.0",
-    "karma-jasmine": "~0.2.0",
-    "grunt-karma": "~0.6.2",
-    "karma-coverage": "~0.1.4",
-    "grunt-karma-coveralls": "~2.3.0"
+    "karma": "~0.12",
+    "karma-jasmine": "~0.2",
+    "grunt-karma": "~0.8",
+    "karma-coverage": "~0.1",
+    "grunt-karma-coveralls": "~2.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -13,4 +13,4 @@ after_success:
   
 branches:
   only:
-    - script_files
+    - master

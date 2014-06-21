@@ -13,10 +13,10 @@ var thisUserIndex = 0; // first user
 var tasters = [
   {"name":"(no name)",
    "aromaScore":0,
-   "aromaScore":0,
+   "appearanceScore":0,
    "flavorScore":0,
-   "flavorScore":0,
-   "impressionScore":0},
+   "mouthfeelScore":0,
+   "impressionScore":0}
 ];
 thisSession.set("tasters", tasters);
 

@@ -1,6 +1,10 @@
 {
   "name": "beer-sense",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/Sensory-Web/Beer-Sense.git"
+    },
   "devDependencies": {
     "karma": "~0.12.16",
     "karma-jasmine": "~0.2.2"

@@ -6,6 +6,7 @@ module.exports = function(config) {
       'test/**/*.spec.js'
     ],
     exclude: [
+      'js/vendor/**/*.js'
     ],
     autoWatch: true,
     frameworks: [

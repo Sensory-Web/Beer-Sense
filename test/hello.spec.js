@@ -3,10 +3,10 @@
 
 describe('hello.js', function() {
   it('hello', function() {
-    expect(hello('Jon')).to.be('Hello, Jon');
+    expect(hello('Jon')).toBe('Hello, Jon');
   });
 
   it('hi', function() {
-    expect(hi('Jon')).to.be('Hi, Jon');
+    expect(hi('Jon')).toBe('Hi, Jon');
   });
 });

@@ -1,9 +1,9 @@
 describe('hello.js', function() {
   it('hello', function() {
-    expect(hello('hoge')).to.be('Hello, hoge');
+    expect(hello('Jon')).to.be('Hello, Jon');
   });
 
   it('hi', function() {
-    expect(hi('hoge')).to.be('Hi, hoge');
+    expect(hi('Jon')).to.be('Hi, Jon');
   });
 });

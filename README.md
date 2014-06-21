@@ -1,7 +1,6 @@
 Beer-Sense
 ==========
-
-[![Build Status](https://travis-ci.org/Sensory-Web/Beer-Sense.svg?branch=master)](https://travis-ci.org/Sensory-Web/Beer-Sense)
+[![Build Status](https://travis-ci.org/Sensory-Web/Beer-Sense.svg?branch=master)](https://travis-ci.org/Sensory-Web/Beer-Sense) [![Coverage Status](https://coveralls.io/repos/Sensory-Web/Beer-Sense/badge.png)](https://coveralls.io/r/Sensory-Web/Beer-Sense) [![Dependencies](https://david-dm.org/Sensory-Web/Beer-Sense.png)](https://david-dm.org/Sensory-Web/Beer-Sense)
 
 Front-end for Beer Sense web app
 (hosted at http://perceptualentropy.com/taste )

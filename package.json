@@ -10,7 +10,10 @@
     "karma-jasmine": "~0.2",
     "grunt-karma": "~0.8",
     "karma-coverage": "~0.1",
-    "grunt-karma-coveralls": "~2.5"
+    "grunt-karma-coveralls": "~2.5",
+    "karma-chrome-launcher": "~0.1",
+    "karma-firefox-launcher": "~0.1",
+    "karma-phantomjs-launcher": "~0.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

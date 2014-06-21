@@ -18,9 +18,6 @@ module.exports = function(config) {
       'PhantomJS'
     ],
     plugins: [
-      'karma-chrome-launcher',
-      'karma-firefox-launcher',
-      'karma-phantomjs-launcher'
     ],
     singleRun: false
   });

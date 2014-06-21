@@ -18,6 +18,7 @@ module.exports = function(config) {
       'PhantomJS'
     ],
     plugins: [
+      'karma-jasmine'
     ],
     singleRun: false
   });

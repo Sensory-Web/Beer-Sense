@@ -9,7 +9,6 @@ module.exports = function(config) {
     ],
     autoWatch: true,
     frameworks: [
-      'expect'
     ],
     browsers: [
       'Chrome',

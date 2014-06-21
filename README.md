@@ -13,3 +13,4 @@ This web app is designed to allow you to share beer tasting notes with others.  
 Beer Sense uses [Parse](https://parse.com/products/core) as a back end
 
 We use [HuBoard](https://huboard.com/Sensory-Web/Beer-Sense) to organize & prioritize issues
+ 

@@ -7,10 +7,6 @@ module.exports = function(config) {
     ],
     exclude: [
     ],
-    reporters: [
-      'spec',
-      'growl'
-    ],
     autoWatch: true,
     frameworks: [
       'mocha',
